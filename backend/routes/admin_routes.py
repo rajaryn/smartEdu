@@ -4,22 +4,13 @@ import os, time, random
 from utils.db import db
 from models.user import User
 from models.class_model import Class
-from models.student_profile import StudentProfile # This import is correct, the issue is likely path-related.
+from models.student_profile import StudentProfile
 from models.subject import Subject
 from utils.security import hash_password, encrypt_data
 from utils.auth_middleware import requires_auth, requires_role
+from embedding_utils import generate_and_encrypt_embedding
 
 admin_bp = Blueprint('admin_bp', __name__)
-
-def _generate_mock_embedding(image_path):
-    """
-    --- AI Model Integration Point ---
-    This is a placeholder function. In a real application, you would use
-    a library like face_recognition, DeepFace, or a custom model here
-    to convert the image at `image_path` into a numerical vector.
-    """
-    print(f"Generating mock embedding for image: {image_path}")
-    return [random.uniform(-1, 1) for _ in range(128)]
 
 @admin_bp.route('/users', methods=['GET'])
 @requires_auth
@@ -57,7 +48,6 @@ def create_user():
 @admin_bp.route('/students', methods=['POST'])
 @requires_auth
 def create_student_detailed():
-    """Create a new student with detailed information from the admin form."""
     # Handle multipart/form-data
     data = request.form
     required_fields = ['firstName', 'lastName', 'email', 'password', 'class_id']
@@ -82,9 +72,22 @@ def create_student_detailed():
                 os.makedirs(upload_folder, exist_ok=True)
                 image_path = os.path.join(upload_folder, filename)
                 photo_file.save(image_path)
-                raw_embedding = _generate_mock_embedding(image_path)
-                face_embedding = encrypt_data(raw_embedding) # Encrypt the embedding
-                photo_url = f"/uploads/class_images/{filename}"
+
+            
+                # Generate and encrypt the embedding from the saved photo
+                face_embedding = generate_and_encrypt_embedding(image_path)
+                
+                if face_embedding is None:
+                    # Handles errors from DeepFace (e.g., no face found)
+                    db.session.rollback()
+
+                    # Optionally delete the temp photo
+                    os.remove(image_path) 
+                    return jsonify({"error": "Could not process face. Please use a clear, forward-facing photo."}), 400
+                
+                # In a real app, you'd now upload this 'image_path' to cloud storage (like S3)
+                # and delete the local file. For now, we'll just use the local path.
+                photo_url = f"/uploads/student_photos/{filename}" 
 
         # Step 1: Create the core User for authentication
         new_user = User(
