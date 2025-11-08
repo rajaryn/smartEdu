@@ -7,7 +7,7 @@ class Attendance(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     
     # Foreign key for the class
-    class_id = db.Column(db.Integer, db.ForeignKey('class.id'), nullable=False)
+    class_id = db.Column(db.Integer, db.ForeignKey('classes.id'), nullable=False)
     
     date = db.Column(db.Date, nullable=False, default=datetime.date.today)
     

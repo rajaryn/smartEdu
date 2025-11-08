@@ -36,38 +36,28 @@ function SignupPage({ onSignup }) {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8f9fa' }}>
-      <form onSubmit={handleSubmit} style={{ background: '#fff', padding: '2rem', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', minWidth: '320px' }}>
-        <h2 style={{ marginBottom: '1.5rem', textAlign: 'center', color: '#222' }}>Sign Up</h2>
-        {error && <div style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
-        <div style={{ marginBottom: '1rem' }}>
-          <label htmlFor="name" style={{ display: 'block', marginBottom: '0.5rem', color: '#555' }}>Name</label>
-          <input type="text" id="name" name="name" value={form.name} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }} required />
-        </div>
-        <div style={{ marginBottom: '1rem' }}>
-          <label htmlFor="email" style={{ display: 'block', marginBottom: '0.5rem', color: '#555' }}>Email</label>
-          <input type="email" id="email" name="email" value={form.email} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }} required />
-        </div>
-        <div style={{ marginBottom: '1rem' }}>
-          <label htmlFor="role" style={{ display: 'block', marginBottom: '0.5rem', color: '#555' }}>Role</label>
-          <select id="role" name="role" value={form.role} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }} required>
+    <div style={{ minHeight: '100vh', background: '#0d1117', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'sans-serif' }}>
+      <div style={{ width: 350 }}>
+        <form onSubmit={handleSubmit} style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: 6, padding: '40px 40px 24px 40px', boxShadow: '0 1px 3px rgba(27,31,35,0.04)', display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <h2 style={{ fontFamily: 'inherit', fontWeight: 600, fontSize: 28, textAlign: 'center', marginBottom: 24, color: '#c9d1d9' }}>Sign Up</h2>
+          {error && <div style={{ color: '#f85149', textAlign: 'center', marginBottom: 8 }}>{error}</div>}
+          <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Name" style={{ background: '#0d1117', border: '1px solid #30363d', borderRadius: 6, padding: '9px 0 7px 8px', fontSize: 16, color: '#c9d1d9' }} required />
+          <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="Email" style={{ background: '#0d1117', border: '1px solid #30363d', borderRadius: 6, padding: '9px 0 7px 8px', fontSize: 16, color: '#c9d1d9' }} required />
+          <select name="role" value={form.role} onChange={handleChange} style={{ background: '#0d1117', border: '1px solid #30363d', borderRadius: 6, padding: '9px 0 7px 8px', fontSize: 16, color: '#c9d1d9' }} required>
             <option value="">Select Role</option>
             <option value="admin">Admin</option>
             <option value="teacher">Teacher</option>
             <option value="student">Student</option>
             <option value="parent">Parent</option>
           </select>
+          <input type="text" name="class_id" value={form.class_id} onChange={handleChange} placeholder="Class ID (for students/parents)" style={{ background: '#0d1117', border: '1px solid #30363d', borderRadius: 6, padding: '9px 0 7px 8px', fontSize: 16, color: '#c9d1d9' }} />
+          <input type="password" name="password" value={form.password} onChange={handleChange} placeholder="Password" style={{ background: '#0d1117', border: '1px solid #30363d', borderRadius: 6, padding: '9px 0 7px 8px', fontSize: 16, color: '#c9d1d9' }} required />
+          <button type="submit" style={{ background: '#15b2f5ff', color: '#fff', border: 'none', borderRadius: 6, padding: '8px 0', fontWeight: 600, fontSize: 16, cursor: 'pointer', marginTop: 8 }}>Sign Up</button>
+        </form>
+        <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: 6, marginTop: 12, padding: '20px 0', textAlign: 'center', fontSize: 15, color: '#c9d1d9' }}>
+          Already have an account? <a href="/login" style={{ color: '#15b2f5ff', fontWeight: 600, textDecoration: 'none' }}>Log in</a>
         </div>
-        <div style={{ marginBottom: '1rem' }}>
-          <label htmlFor="class_id" style={{ display: 'block', marginBottom: '0.5rem', color: '#555' }}>Class ID (for students/parents)</label>
-          <input type="text" id="class_id" name="class_id" value={form.class_id} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }} />
-        </div>
-        <div style={{ marginBottom: '1.5rem' }}>
-          <label htmlFor="password" style={{ display: 'block', marginBottom: '0.5rem', color: '#555' }}>Password</label>
-          <input type="password" id="password" name="password" value={form.password} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }} required />
-        </div>
-        <button type="submit" style={{ width: '100%', padding: '0.75rem', borderRadius: '4px', background: '#28a745', color: '#fff', border: 'none', fontWeight: 'bold', cursor: 'pointer' }}>Sign Up</button>
-      </form>
+      </div>
     </div>
   );
 }
