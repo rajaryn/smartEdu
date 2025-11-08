@@ -1,21 +1,3 @@
-"""
-Main application file for the SmartEdu Flask backend.
-
-This file is the entry point for the backend. It does the following:
-1.  Imports necessary libraries and modules.
-2.  Defines a `create_app` factory function.
-3.  Inside `create_app`:
-    - Initializes the Flask app.
-    - Loads configuration from `config.py`.
-    - Initializes extensions like SQLAlchemy (database) and CORS (Cross-Origin Resource Sharing).
-    - Creates the file upload directory.
-    - Registers all API blueprints (routes) from the `routes/` directory.
-    - Sets up a route to serve uploaded images.
-    - Defines a health check route (`/api/health`).
-    - Creates all database tables based on the models in `models/`.
-    - Seeds the database with initial data (e.g., an admin) if it's empty.
-4.  Runs the Flask app when the script is executed directly.
-"""
 
 import os
 from flask import Flask, jsonify, send_from_directory
@@ -24,7 +6,8 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from config import Config
 from utils.db import db  # Import the shared SQLAlchemy instance
-import requests
+from flask import request
+from embedding_utils import generate_and_encrypt_embedding
 
 def create_app():
     """

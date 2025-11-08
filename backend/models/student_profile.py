@@ -21,7 +21,7 @@ class StudentProfile(db.Model):
     blood_group = db.Column(db.String(10))
     phone = db.Column(db.String(20))
     
-    # Column to store the numerical face embedding
-    face_embedding = db.Column(db.JSON, nullable=True)
+    #Column to store the numerical face embedding
+    face_embedding=db.Column(db.JSON,nullable=True)
 
     user = db.relationship('User', back_populates='student_profile')
