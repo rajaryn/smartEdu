@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+venv/
+env/
+*.sqlite3
+instance/
+.mypy_cache/
+.pytest_cache/
+
+# Node
+node_modules/
+*.log
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads
+smartEdu/backend/uploads/class_images/
+
+# Build
+smartEdu/frontend/dist/
+
+# Misc
+*.bak
+*.swp
+*.tmp
+
+# Environment
+.env.local
+.env.*.local
+
+# Coverage
+coverage/
+*.cover
+
+# Others
+*.orig
+*.rej
+
+# Ignore frontend build artifacts
+smartEdu/frontend/.next/
+smartEdu/frontend/.cache/
+
+# Ignore backend migrations
+smartEdu/backend/migrations/

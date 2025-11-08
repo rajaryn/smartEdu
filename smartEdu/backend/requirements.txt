@@ -1,0 +1,11 @@
+Flask-Migrate
+Flask
+Flask-SQLAlchemy
+Flask-Cors
+python-dotenv
+# Add other dependencies as needed
+
+# For Auth0 JWT validation (uncomment when ready)
+# PyJWT
+# cryptography
+# requests
