@@ -45,8 +45,8 @@ function SignupPage({ onSignup }) {
           <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="Email" style={{ background: '#0d1117', border: '1px solid #30363d', borderRadius: 6, padding: '9px 0 7px 8px', fontSize: 16, color: '#c9d1d9' }} required />
           <select name="role" value={form.role} onChange={handleChange} style={{ background: '#0d1117', border: '1px solid #30363d', borderRadius: 6, padding: '9px 0 7px 8px', fontSize: 16, color: '#c9d1d9' }} required>
             <option value="">Select Role</option>
-            <option value="admin">Admin</option>
-            <option value="teacher">Teacher</option>
+           <option value="admin" disabled style={{ color: '#666' }}>Admin (Not available)</option>
+            <option value="teacher" disabled style={{ color: '#666' }}>Teacher (Not available)</option>
             <option value="student">Student</option>
             <option value="parent">Parent</option>
           </select>
