@@ -1,38 +1,130 @@
-## Migration Note
+# SmartEdu
 
-If you have an existing database, you need to add a `password` column to the `user` table for signup and authentication. Use a migration tool like Flask-Migrate or manually alter the table.
-SmartEdu - Automatic Attendance & Smart Curriculum ManagementThis is a full-stack web application for managing school attendance and curriculum, powered by a placeholder for AI facial recognition.Project StructureSmartEdu/
-├── backend/            # Python Flask Backend
-│   ├── app.py          # Main Flask application file
-│   ├── config.py       # Configuration (DB URI, etc.)
-│   ├── requirements.txt # Python dependencies
-│   ├── models/         # SQLAlchemy DB Models
-│   ├── routes/         # Flask Blueprints (API endpoints)
-│   ├── utils/          # DB instance, Auth middleware
-│   ├── static/
-│   └── uploads/        # Saved class images
-│       └── class_images/
-│
-├── frontend/           # React + Vite Frontend
-│   ├── package.json    # NPM dependencies
-│   ├── vite.config.js  # Vite configuration
-│   └── src/
-│       ├── App.jsx     # The (single) React application file
-│       └── styles/
-│           └── globals.css # Tailwind CSS base
-│
-└── README.md           # This file
-How to Run1. Backend (Flask)Prerequisites: Python 3.7+ and pip.Navigate to the backend directory:cd backend
-Create and activate a virtual environment (recommended):# On macOS/Linux
-python3 -m venv venv
-source venv/bin/activate
+The frontend for the SmartEdu applicationnis built using **Vite**, **React**, and **Tailwind CSS**.
 
+## Project Architecture
 
-python -m venv venv
-.\venv\Scripts\activate
-Install the required Python packages:pip install -r requirements.txt
-Run the Flask application:python app.py
-(Or flask run if you have flask CLI installed and configured)The backend will start on http://127.0.0.1:5000. It will also create a smartedu.db SQLite file in the backend directory.2. Frontend (React + Vite)Prerequisites: Node.js and npm.Open a new terminal window.Navigate to the frontend directory:cd frontend
-Install the Node.js dependencies:npm install
-Start the Vite development server:npm run dev
-Open your browser and go to the URL shown in the terminal (usually http://localhost:5173 or similar).3. Using the AppThe application will open to a mock login page.Select a role (Admin, Teacher, Student) from the dropdown and click "Log In".You will be redirected to the appropriate dashboard for that role.As a Teacher: You can try uploading an image file to test the facial recognition endpoint (it's connected!).As an Admin: You can see the dashboard now loads data live from the backend. You can also create new users and classes.As a Student: You can see the placeholder dashboard.Next StepsReal Auth: Replace the mock useAuth hook in App.jsx with the actual @auth0/auth0-react SDK.Real Backend Auth: Implement the JWT validation logic in backend/utils/auth_middleware.py using your Auth0 domain and audience.AI Model: Integrate your OpenCV or DeepFace model into the backend/routes/facerec_routes.py file, replacing the mock result.
+To facilitate development and prototyping, frontend is built using a **single-file architecture**. All React components, pages, contexts, and API logic are contained within:
+
+* `src/App.jsx`
+
+This single file includes:
+* **Authentication:** A full login/logout flow for different user roles (Admin, Teacher, Student, Parent).
+* **State-Based Navigation:** Page routing is handled by a top-level React state (`activePage`) in the main `App` component, not by a traditional file-based router.
+* **All Pages:** Components for each page (`AdminDashboard`, `ManageUsersPage`, `ManageClassesPage`, `TeacherDashboard`, `StudentDashboard`, `LoginPage`, etc.).
+* **All Components:** Reusable components like `Sidebar`, `Navbar`, `StatCard`, and `ChartCard`.
+* **API Layer:** An `api` object that manages all `fetch` calls to the backend.
+
+## How to Run
+
+**Prerequisites:** [Node.js](https://nodejs.org/) (which includes npm) must be installed.
+
+1.  **Navigate to the Frontend Directory**
+    Open a terminal and change to this directory:
+    ```sh
+    cd path/to/your/SmartEdu/frontend
+    ```
+
+2.  **Install Dependencies**
+    This will read the `package.json` file and install React, Vite, and other required libraries.
+    ```sh
+    npm install
+    ```
+
+3.  **Run the Development Server**
+    This command starts the Vite development server.
+    ```sh
+    npm run dev
+    ```
+
+4.  **Open the App**
+    Your terminal will display a local URL, typically: `http://localhost:5173`. Open this URL in your web browser.
+
+## File Structure
+
+* `frontend/`
+    * `package.json`: Lists all Node.js dependencies and scripts.
+    * `vite.config.js`: Configuration file for the Vite build tool.
+    * `index.html`: The main HTML entry point for the browser. This file contains the `<div id="root">`.
+    * `src/`
+        * `index.jsx`: The main JavaScript entry point. It imports `App.jsx` and renders it into the "root" div from `index.html`.
+        * `App.jsx`: Contains the entire React application (all pages, components, and logic).
+        * `styles/globals.css`: Imports and configures Tailwind CSS.
+
+## Backend Connection
+
+This frontend is designed to communicate with the **SmartEdu Flask Backend**. Please ensure the backend server is running (typically on `http://127.0.0.1:5000`) for API calls (like fetching users, creating classes, or uploading files) to work.
+
+## Backend
+
+Built with Python and Flask. Its core feature is an AI-powered attendance system that uses facial recognition to mark student attendance from a single class photo.
+
+The system is built with a strong emphasis on security, ensuring all sensitive biometric data (face embeddings) is fully encrypted at rest.
+
+---
+
+## Core Features
+
+* **Student Profile Management:** An admin-facing API for creating, viewing, and managing student profiles.
+* **AI-Powered Enrollment:** When an admin uploads a student's photo, the system automatically:
+    1.  Detects the face in the photo.
+    2.  Generates a 512-dimension vector embedding using the `Facenet512` model.
+    3.  **Encrypts** this vector using `Fernet` (from the `cryptography` library).
+    4.  Saves the secure, encrypted string to the database.
+* **Automated Attendance Recognition:**
+    1.  A script (or future API route) loads the most recent class photo from the `uploads/class_images/` directory.
+    2.  It detects all faces in the class photo.
+    3.  It queries the database, loads the **encrypted** embeddings for all enrolled students, and **decrypts** them in memory.
+    4.  It compares each face from the class photo against the decrypted student embeddings to find matches.
+    5.  It generates a final report and an output image with faces boxed and labeled.
+
+---
+
+## Technology Stack
+
+* **Backend:** Python, Flask
+* **Database:** SQLAlchemy (with SQLite in development)
+* **AI / Face Recognition:** `deepface`
+* **AI Models:**
+    * **Detection:** `mtcnn`
+    * **Recognition:** `Facenet512` (Used for both enrollment and matching)
+* **Security:** `cryptography` (for Fernet encryption)
+* **Environment:** `python-dotenv` (for managing the encryption key)
+
+---
+
+## Installation & Setup
+
+This project has specific dependencies. Following these steps is critical.
+
+### 1. Project Setup
+
+1.  Clone the repository:
+    ```bash
+    git clone <your-repo-url>
+    cd smartEdu/backend
+    ```
+
+2.  **Create a Python 3.11 Virtual Environment**
+    This project's dependencies (especially `deepface`'s) are sensitive. Python 3.13 and 3.12 are not compatible. **You must use Python 3.10 or 3.11.**
+    ```bash
+    # (Assuming you have Python 3.11 installed as py -3.11)
+    py -3.11 -m venv venv
+    ```
+
+3.  **Activate the Environment**
+    * **Command Prompt (cmd.exe):**
+        ```bash
+        .\venv\Scripts\activate
+        ```
+    * **Git Bash / MINGW64:**
+        ```bash
+        source venv/Scripts/activate
+        ```
+
+### 2. Install Dependencies
+
+Install all required Python packages:
+
+```bash
+pip install Flask Flask-SQLAlchemy Flask-Migrate deepface opencv-python cryptography python-dotenv tf-keras
