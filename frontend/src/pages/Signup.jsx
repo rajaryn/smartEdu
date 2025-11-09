@@ -7,7 +7,13 @@ function SignupPage({ onSignup }) {
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    const newFormState = { ...form, [name]: value };
+
+    if (name === 'role' && (value === 'admin' || value === 'teacher')) {
+      newFormState.class_id = ''; // Clear class_id when role is admin or teacher
+    }
+    setForm(newFormState);
   };
 
   const handleSubmit = async (e) => {
@@ -45,12 +51,12 @@ function SignupPage({ onSignup }) {
           <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="Email" style={{ background: '#0d1117', border: '1px solid #30363d', borderRadius: 6, padding: '9px 0 7px 8px', fontSize: 16, color: '#c9d1d9' }} required />
           <select name="role" value={form.role} onChange={handleChange} style={{ background: '#0d1117', border: '1px solid #30363d', borderRadius: 6, padding: '9px 0 7px 8px', fontSize: 16, color: '#c9d1d9' }} required>
             <option value="">Select Role</option>
-           <option value="admin" disabled style={{ color: '#666' }}>Admin (Not available)</option>
-            <option value="teacher" disabled style={{ color: '#666' }}>Teacher (Not available)</option>
+           <option value="admin">Admin </option>
+            <option value="teacher" >Teacher </option>
             <option value="student">Student</option>
             <option value="parent">Parent</option>
           </select>
-          <input type="text" name="class_id" value={form.class_id} onChange={handleChange} placeholder="Class ID (for students/parents)" style={{ background: '#0d1117', border: '1px solid #30363d', borderRadius: 6, padding: '9px 0 7px 8px', fontSize: 16, color: '#c9d1d9' }} />
+          <input type="text" name="class_id" value={form.class_id} onChange={handleChange} placeholder="Class ID (for students/parents)" style={{ background: '#0d1117', border: '1px solid #30363d', borderRadius: 6, padding: '9px 0 7px 8px', fontSize: 16, color: '#c9d1d9' }} disabled={form.role === 'admin' || form.role === 'teacher'} />
           <input type="password" name="password" value={form.password} onChange={handleChange} placeholder="Password" style={{ background: '#0d1117', border: '1px solid #30363d', borderRadius: 6, padding: '9px 0 7px 8px', fontSize: 16, color: '#c9d1d9' }} required />
           <button type="submit" style={{ background: '#15b2f5ff', color: '#fff', border: 'none', borderRadius: 6, padding: '8px 0', fontWeight: 600, fontSize: 16, cursor: 'pointer', marginTop: 8 }}>Sign Up</button>
         </form>
